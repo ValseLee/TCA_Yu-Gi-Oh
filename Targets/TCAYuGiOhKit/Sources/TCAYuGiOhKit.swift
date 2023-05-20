@@ -1,6 +1,6 @@
 import Foundation
 
-public final class YugiTraderKit {
+public final class TCAYuGiOhKit {
     public static func hello() {
         print("Hello, from your Kit framework")
     }

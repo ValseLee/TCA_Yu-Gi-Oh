@@ -1,8 +1,8 @@
 import SwiftUI
-import YugiTraderUI
+import TCAYuGiOhUI
 
 @main
-struct YugiTraderApp: App {
+struct TCAYuGiOhApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
