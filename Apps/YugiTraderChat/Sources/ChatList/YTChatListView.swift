@@ -7,10 +7,14 @@
 //
 
 import SwiftUI
+import CommonModule
+import SendbirdChatSDK
 
 struct YTChatListView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            YTButton()
+        }
     }
 }
 

@@ -1,4 +1,4 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.app(name: "YugiTrader")
+let project = Project.app(name: "YugiTraderChat")
