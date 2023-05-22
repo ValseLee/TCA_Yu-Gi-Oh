@@ -44,10 +44,8 @@ extension Project {
             bundleId: "com.Celan.\(name)",
             deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
             infoPlist: .extendingDefault(with: infoPlist),
-//            sources: [.glob(pattern: .relativeToManifest("Sources/**"))]
-//            resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
-            sources: "\(name)/Sources/**",
-            resources: "\(name)/Resources/**",
+            sources: [.glob(.relativeToManifest("Sources/**"))],
+            resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
             dependencies: dependencies,
             settings: nil
         )

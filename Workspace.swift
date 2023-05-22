@@ -9,7 +9,7 @@ extension Workspace {
             name: "TCA_YugiTrader",
             projects: [
                 "Apps/**",
-                "Modules/**"
+                "Modules/**+"
             ],
             schemes: []
         )
