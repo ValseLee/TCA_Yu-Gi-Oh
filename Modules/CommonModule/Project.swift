@@ -1,29 +1,24 @@
 import ProjectDescription
 
-enum Constants {
-    static let ORG_NAME = "Celan"
-    static let APP_NAME = "YugiTrader"
-}
+private let name = "CommonModule"
 
 let project = Project(
-    name: "CommonModule",
-    organizationName: Constants.ORG_NAME,
+    name: name,
+    organizationName: "Celan",
     targets: [
         Target(
-            name: "CommonModule",
+            name: name,
             platform: .iOS,
             product: .framework,
-            bundleId: "com.\(Constants.ORG_NAME).\(Constants.APP_NAME).CommonModule",
-            deploymentTarget: .iOS(targetVersion: "15.0", devices: .iphone),
+            bundleId: "com.Celan.\(name)",
+            deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
             infoPlist: .default,
-            sources: ["Sources/**"],
-            resources: ["Resources/**"],
+            sources: [.glob(.relativeToManifest("Sources/**"))],
+            resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
             dependencies: [
                 .external(name: "SendbirdChatSDK"),
-                .external(name: "Kingfisher"),
-                .external(name: "swift-composable-architecture")
+                .external(name: "ComposableArchitecture")
             ]
         )
     ]
 )
-

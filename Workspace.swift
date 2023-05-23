@@ -3,9 +3,10 @@ import ProjectDescription
 let workspace = Workspace.create()
 
 extension Workspace {
+    
     static func create() -> Workspace {
         Workspace(
-            name: "YugiTrader",
+            name: "TCA_YugiTrader",
             projects: [
                 "Apps/**",
                 "Modules/**+"
@@ -13,13 +14,10 @@ extension Workspace {
             schemes: []
         )
     }
-    
 }
 
 // MARK: - Scheme
-
 extension Workspace {
-    
     static func schemes(appNames: [String]) -> [Scheme] {
         appNames.map {
             appScheme(name: $0)
