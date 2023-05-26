@@ -13,9 +13,15 @@ extension Project {
                     name: name,
                     platform: .iOS,
                     dependencies: [
+                        // Common Module For Design System
                         .project(
                             target: "CommonModule",
                             path: .relativeToRoot("Modules/CommonModule")
+                        ),
+                        // Internal Module For Settings/Plists
+                        .project(
+                            target: "Internal",
+                            path: .relativeToRoot("Modules/Internal")
                         )
                     ]
                 )
@@ -47,7 +53,12 @@ extension Project {
             sources: [.glob(.relativeToManifest("Sources/**"))],
             resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
             dependencies: dependencies,
-            settings: nil
+            settings: .settings(
+                configurations: [
+                    // Configurations
+                ],
+                defaultSettings: .recommended
+            )
         )
         
         return mainTarget
