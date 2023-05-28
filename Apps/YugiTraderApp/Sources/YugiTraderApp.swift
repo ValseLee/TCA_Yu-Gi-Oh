@@ -1,21 +1,21 @@
-//
-//  YugiTraderApp.swift
-//  YugiTraderApp
-//
-//  Created by Celan on 2023/05/28.
-//  Copyright © 2023 Celan. All rights reserved.
-//
-
 import SwiftUI
+import FirebaseCore
 
-struct YugiTraderApp: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+@main
+struct YugiTraderApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    var body: some Scene {
+        WindowGroup {
+            VStack { }
+        }
     }
 }
 
-struct YugiTraderApp_Previews: PreviewProvider {
-    static var previews: some View {
-        YugiTraderApp()
-    }
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+
+    return true
+  }
 }
