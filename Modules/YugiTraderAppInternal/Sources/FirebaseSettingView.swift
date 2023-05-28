@@ -8,14 +8,8 @@
 
 import SwiftUI
 
-struct FirebaseSettingView: View {
+struct MockView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-struct FirebaseSettingView_Previews: PreviewProvider {
-    static var previews: some View {
-        FirebaseSettingView()
+        Text("MOCK")
     }
 }

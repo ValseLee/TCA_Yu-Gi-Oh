@@ -16,11 +16,24 @@ let project = Project(
             deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
             // Internal > Support > Info.plist
             infoPlist: googlePlist,
-            sources: [],
+            sources: [.glob(.relativeToManifest("Sources/**"))],
             resources: [],
             dependencies: [
-                .firebaseMessaging
-            ]
+                .firebaseMessaging,
+            ],
+            settings: .settings(
+                configurations: [
+                    .release(
+                        name: .release,
+                        settings: .firebase
+                    ),
+                    .debug(
+                        name: .debug,
+                        settings: .firebase
+                    )
+                ],
+                defaultSettings: .recommended
+            )
         )
     ]
 )
