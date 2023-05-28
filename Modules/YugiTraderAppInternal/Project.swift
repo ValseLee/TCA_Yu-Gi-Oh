@@ -1,6 +1,8 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
-private let name = "Internal"
+private let name = "YugiTraderAppInternal"
+private let googlePlist: InfoPlist = .file(path: .relativeToManifest("Support/GoogleService-Info.plist"))
 
 let project = Project(
     name: name,
@@ -12,11 +14,12 @@ let project = Project(
             product: .framework,
             bundleId: "com.Celan.\(name)",
             deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
-            infoPlist: .default,
-            sources: [.glob(.relativeToManifest("Sources/**"))],
+            // Internal > Support > Info.plist
+            infoPlist: googlePlist,
+            sources: [],
             resources: [],
             dependencies: [
-                
+                .firebaseMessaging
             ]
         )
     ]
