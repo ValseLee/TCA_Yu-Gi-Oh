@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let dependencies = Dependencies(
-    swiftPackageManager: .init([
+    swiftPackageManager: SwiftPackageManagerDependencies([
         .sendbirdSDK,
         .composableArchitecture,
         .firebase

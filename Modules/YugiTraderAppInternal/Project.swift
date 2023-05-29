@@ -2,7 +2,11 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 private let name = "YugiTraderAppInternal"
-private let googlePlist: InfoPlist = .file(path: .relativeToManifest("Support/GoogleService-Info.plist"))
+
+private let infoPlist: [String: InfoPlist.Value] = [
+    "CFBundleShortVersionString": "1.0",
+    "CFBundleVersion": "1",
+]
 
 let project = Project(
     name: name,
@@ -14,8 +18,7 @@ let project = Project(
             product: .framework,
             bundleId: "com.Celan.\(name)",
             deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
-            // Internal > Support > Info.plist
-            infoPlist: googlePlist,
+            infoPlist: .extendingDefault(with: infoPlist),
             sources: [.glob(.relativeToManifest("Sources/**"))],
             resources: [],
             dependencies: [
@@ -33,7 +36,11 @@ let project = Project(
                     )
                 ],
                 defaultSettings: .recommended
-            )
+            ),
+            additionalFiles: [
+                // Internal > Support > GoogleService-Info.plist
+                .glob(pattern: .relativeToManifest("Support/GoogleService-Info.plist"))
+            ]
         )
     ]
 )

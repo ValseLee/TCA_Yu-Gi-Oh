@@ -1,8 +1,4 @@
-//
-//  Project.swift
-//  ProjectDescriptionHelpers
-//
-//  Created by Celan on 2023/05/29.
-//
+import ProjectDescription
+import ProjectDescriptionHelpers
 
-import Foundation
+let project = Project.framework(name: "YugiTraderLoginUI")
