@@ -1,4 +1,8 @@
-import ProjectDescription
-import ProjectDescriptionHelpers
+//
+//  Proejct.swift
+//  ProjectDescriptionHelpers
+//
+//  Created by Celan on 2023/05/29.
+//
 
-let project = Project.app(name: "YugiTraderChat")
+import Foundation
