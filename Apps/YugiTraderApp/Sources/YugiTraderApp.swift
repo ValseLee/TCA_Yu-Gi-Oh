@@ -1,21 +1,19 @@
 import SwiftUI
 import FirebaseCore
+import YugiTraderAppInternal
+import YugiTraderLoginKit
 
 @main
 struct YugiTraderApp: App {
+    // Dependency From YugiTraderAppInternal
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
     var body: some Scene {
         WindowGroup {
-            VStack { }
+            NavigationStack {
+                YTLoginView()
+            }
         }
     }
 }
 
-class AppDelegate: NSObject, UIApplicationDelegate {
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    FirebaseApp.configure()
-
-    return true
-  }
-}
