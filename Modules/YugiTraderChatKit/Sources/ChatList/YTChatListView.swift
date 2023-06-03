@@ -10,8 +10,9 @@ import SwiftUI
 import CommonModule
 import SendbirdChatSDK
 
-struct YTChatListView: View {
-    var body: some View {
+public struct YTChatListView: View {
+    public init() { }
+    public var body: some View {
         VStack {
             YTButton()
         }

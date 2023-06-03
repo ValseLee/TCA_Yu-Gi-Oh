@@ -1,4 +1,5 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 private let name = "CommonModule"
 
@@ -16,8 +17,8 @@ let project = Project(
             sources: [.glob(.relativeToManifest("Sources/**"))],
             resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
             dependencies: [
-                .external(name: "SendbirdChatSDK"),
-                .external(name: "ComposableArchitecture")
+                .sendbirdChatSDK,
+                .composableArchitecture
             ]
         )
     ]
