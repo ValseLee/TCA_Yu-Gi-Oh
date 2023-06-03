@@ -1,12 +1,12 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.subApp(
-    name: "YugiTraderLogin",
+let project = Project.mainApp(
+    name: "YugiTraderApp",
     targetDependencies: [
         .commonModule,
         .yugiTraderAppInternal,
-        .yugiTraderLoginUI,
-        .yugiTraderLoginKit
+        .yugiTraderChat,
+        .yugiTraderLogin
     ]
 )
