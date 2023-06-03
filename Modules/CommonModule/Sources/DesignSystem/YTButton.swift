@@ -1,15 +1,52 @@
 import SwiftUI
 
-public struct YTButton: View {
-    public init() { }
+public enum YTButtonTypes {
+    case primary, secondary, plainText
+}
+
+public struct YTButton<Label: View>: View {
+    // MARK: - Properties
+    let buttonType: YTButtonTypes
+    let buttonLabel: Label
     
+    // MARK: - LIFECYCLE
+    public init(
+        buttonType: YTButtonTypes,
+        @ViewBuilder label: @escaping () -> Label
+    ) {
+        self.buttonType = buttonType
+        self.buttonLabel = label()
+    }
+    
+    // MARK: - Body
     public var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        switch buttonType {
+        case .primary:
+            Button {
+                
+            } label: {
+                buttonLabel
+            }
+        case .secondary:
+            Button {
+                
+            } label: {
+                buttonLabel
+            }
+        case .plainText:
+            Button {
+                
+            } label: {
+                buttonLabel
+            }
+        }
     }
 }
 
 struct YTButton_Previews: PreviewProvider {
     static var previews: some View {
-        YTButton()
+        YTButton(buttonType: .primary) {
+            Text("?")
+        }
     }
 }
