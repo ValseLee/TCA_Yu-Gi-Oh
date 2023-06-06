@@ -8,14 +8,26 @@
 
 import SwiftUI
 
-struct MessageBubble: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+internal struct Bubble: Shape {
+    internal let isCurrentUsersMessage: Bool
+    
+    internal init(isCurrentUsersMessage: Bool) {
+        self.isCurrentUsersMessage = isCurrentUsersMessage
     }
-}
-
-struct MessageBubble_Previews: PreviewProvider {
-    static var previews: some View {
-        MessageBubble()
+    
+    internal func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners:
+                isCurrentUsersMessage
+            ? [.topLeft, .bottomLeft, .bottomRight]
+            : [.topRight, .bottomRight, .bottomLeft],
+            cornerRadii: CGSize(
+                width: 20,
+                height: 20
+            )
+        )
+        
+        return Path(path.cgPath)
     }
 }

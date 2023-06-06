@@ -11,34 +11,31 @@ import CommonModule
 import YugiTraderAppInternal
 
 public struct MainYTChatRoomView: View {
-    @State private var scrollOffset: CGFloat = 0
-    @State private var date: Date = .now
-    @State private var toIndex: Int = 0
+    @State private var scollDate: Date = .now
+    @State private var scrollHighlight: String = ""
+    @State private var isCalendarShown: Bool = false
     
-    let mockArr: [Message] = Array(
-        repeating: Message.mock(),
-        count: 50
-    )
-    
+    let mockArr: [Message] = Message.getMockArray(repeatCount: 30)
+    var arrDateRange: ClosedRange<Date> {
+        if mockArr.count > 0 {
+            let dateArr = mockArr.map { $0.date }
+            // !!!: - 나중에 last랑 First랑 위치 바꿔야댐!
+            return dateArr.last! ... dateArr.first!
+        } else {
+            return Date.now ... Date.now
+        }
+    }
+
     // MARK: - LIFECYCLE
     public init() { }
     
-    public init(scrollOffset: CGFloat, date: Date) {
-        self.scrollOffset = scrollOffset
-        self.date = date
+    public init(date: Date) {
+        self.scollDate = date
     }
     
     // MARK: - BODY
     public var body: some View {
         ScrollView {
-            Picker("\(toIndex)", selection: $toIndex) {
-                ForEach(0..<mockArr.count) { index in
-                    Text("\(index)")
-                }
-            }
-            
-            DatePicker("To Date", selection: $date)
-   
             ScrollViewReader { reader in
                 VStack {
                     ForEach(
@@ -48,43 +45,108 @@ public struct MainYTChatRoomView: View {
                         VStack {
                             VStack {
                                 Text("\(index), \(message.message)")
-                                    .padding(8)
-                                    .frame(maxWidth: .infinity)
+                                    .padding(.horizontal, 8)
                                     
                                 Text(Date.getMessageDateString(with: message.date))
                             }
+                            .padding()
                             .id(index)
                         }
+                        .background {
+                            getMessageCellBackgroundColor(with: message)
+                        }
+                        .clipShape(Bubble(isCurrentUsersMessage: checkIfCurrentUsersMessage(message: message)))
+                        .frame(
+                            maxWidth: .infinity,
+                            alignment: checkIfCurrentUsersMessage(message: message)
+                            ? .trailing
+                            : .leading
+                        )
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
                         .id(Date.getMessageDateString(with: message.date))
                     }
                 }
-                .onChange(of: date) { newValue in
+                .id("TOP")
+                .onChange(of: scollDate) { newValue in
                     let dateString = Date.getMessageDateString(with: newValue)
-                    print("DATE CHANGED: \(dateString)")
+                    isCalendarShown = false
+                    
                     withAnimation {
                         reader.scrollTo(
                             dateString,
                             anchor: .bottom
                         )
+                        scrollHighlight = dateString
+                        withAnimation(Animation.easeInOut(duration: 1.0)) {
+                            scrollHighlight = ""
+                        }
                     }
                 }
-                .onChange(of: toIndex) { newValue in
-                    withAnimation {
-                        reader.scrollTo(
-                            newValue,
-                            anchor: .bottom
-                        )
+                .overlay(alignment: .bottomTrailing) {
+                    Button {
+                        withAnimation {
+                            reader.scrollTo(
+                                "TOP",
+                                anchor: .top
+                            )
+                        }
+                    } label: {
+                        Text("TO TOP")
                     }
-
                 }
             }
         }
+        .sheet(isPresented: $isCalendarShown) {
+            ScrollView {
+                DatePicker(
+                    selection: $scollDate,
+                    in: arrDateRange,
+                    displayedComponents: .date) {
+                        Image(systemName: "calendar")
+                    }
+                    .datePickerStyle(.graphical)
+                    .frame(width: 340)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    withAnimation {
+                        if !isCalendarShown {
+                            isCalendarShown = true
+                        } else {
+                            isCalendarShown = false
+                        }
+                    }
+                } label: {
+                    Image(systemName: "calendar")
+                }
+            }
+        }
+    }
+    
+    private func getMessageCellBackgroundColor(with message: Message) -> Color {
+        let dateString = Date.getMessageDateString(with: message.date)
+        if scrollHighlight == dateString {
+            return Color.yellow
+        } else {
+            return message.messageSenderID == "Current"
+            ? Color.blue
+            : Color.orange
+        }
+    }
+    
+    private func checkIfCurrentUsersMessage(message: Message) -> Bool {
+        message.messageSenderID == "Current"
     }
 }
 
 struct MainYTChatRoomView_Previews: PreviewProvider {
     static var previews: some View {
-        MainYTChatRoomView()
+        NavigationStack {
+            MainYTChatRoomView()
+        }
     }
 }
 
@@ -92,28 +154,23 @@ struct Message: Hashable {
     let id: String = UUID().uuidString
     let message: String
     let date: Date
+    let messageSenderID: String
     
-    static func mock() -> Self {
-        Message(
-            message: "mock Message",
-            date: .now
-        )
-    }
-}
-
-struct ScrollViewPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat? = nil
-    
-    static func reduce(value: inout Value, nextValue: () -> Value) {
-        defaultValue = value ?? nextValue()
-    }
-}
-
-extension Date {
-    static func getMessageDateString(with messageDate: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let str = dateFormatter.string(from: messageDate)
-        return str
+    static func getMockArray(
+        repeatCount: Int
+    ) -> [Self] {
+        var array = [Message]()
+        
+        for count in 0..<repeatCount {
+            array.append(
+                Message(
+                    message: "mock Message",
+                    date: .now.adding(days: -count),
+                    messageSenderID: count % 2 == 0 ? "Current" : "Others"
+                )
+            )
+        }
+        
+        return array
     }
 }
