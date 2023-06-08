@@ -8,42 +8,8 @@
 
 import SwiftUI
 import ComposableArchitecture
-
-enum StateFilter: String {
-    case all, proceeding, completed
-}
-
-struct ChatStateStore: ReducerProtocol {
-    struct State: Equatable {
-        var chatStateFilter: StateFilter = .all
-        var name: String
-    }
-    
-    enum Action: Equatable {
-        case sendChat
-        case afterSendChat
-        case changeName
-    }
-    
-    var body: some ReducerProtocol<State, Action> {
-        Reduce { state, action in
-            switch action {
-            case .sendChat:
-                state.chatStateFilter = .proceeding
-                print("CHAT IS NOW SENDING")
-                return .send(.afterSendChat)
-                
-            case .afterSendChat:
-                state.chatStateFilter = .completed
-                return .send(.changeName)
-            
-            case .changeName:
-                state.name = state.chatStateFilter.rawValue
-                return .none
-            }
-        }
-    }
-}
+import YugiTraderChatUI
+import YugiTraderChatKit
 
 struct TestView: View {
     let store: StoreOf<ChatStateStore>
@@ -60,9 +26,9 @@ struct TestView: View {
                 }
             }
             
-            WithViewStore(self.store, observe: \.name) { viewStore in
+            WithViewStore(self.store, observe: \.name) { name in
                 VStack {
-                    
+                    Text("\(name.state)")
                 }
             }
         }
