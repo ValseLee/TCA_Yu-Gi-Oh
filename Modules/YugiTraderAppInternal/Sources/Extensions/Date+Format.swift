@@ -7,3 +7,12 @@
 //
 
 import Foundation
+
+public extension Date {
+    static func getMessageDateString(with messageDate: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let str = dateFormatter.string(from: messageDate)
+        return str
+    }
+}
