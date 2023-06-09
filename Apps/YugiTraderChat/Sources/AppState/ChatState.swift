@@ -19,7 +19,7 @@ struct TestView: View {
             WithViewStore(self.store, observe: { $0 }) { viewStore in
                 VStack {
                     Button {
-                        viewStore.send(.sendChat)
+                        viewStore.send(.sendMessage)
                     } label: {
                         Text(viewStore.chatStateFilter == .all ? "\(viewStore.chatStateFilter.rawValue)" : "Done")
                     }
@@ -41,7 +41,10 @@ struct TestPreview: PreviewProvider {
             store: Store(
                 initialState: ChatStateStore.State(
                     chatStateFilter: .all,
-                    name: ""
+                    name: "",
+                    scollDate: .now,
+                    scrollHighlight: "",
+                    isCalendarShown: false
                 ),
                 reducer: {
                     ChatStateStore()
