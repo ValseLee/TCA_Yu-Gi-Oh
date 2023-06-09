@@ -42,25 +42,37 @@ public struct MainYTChatRoomView: View {
                         Array(mockArr.enumerated()),
                         id: \.offset
                     ) { index, message in
-                        VStack {
+                        VStack(
+                            alignment: messageContentsHorizontalAlignment(
+                                message: message
+                            ),
+                            spacing: 5
+                        ) {
+                            Text(message.messageSenderID)
+                                .bold()
+                            
                             VStack {
                                 Text("\(index), \(message.message)")
                                     .padding(.horizontal, 8)
-                                    
-                                Text(Date.getMessageDateString(with: message.date))
+                                    .padding()
                             }
-                            .padding()
-                            .id(index)
+                            .background {
+                                getMessageCellBackgroundColor(with: message)
+                            }
+                            .clipShape(Bubble(isCurrentUsersMessage: checkIfCurrentUsersMessage(message: message)))
+                            
+                            Text(
+                                Date.getMessageDateString(
+                                    with: message.date
+                                )
+                            )
+                            .font(.footnote)
                         }
-                        .background {
-                            getMessageCellBackgroundColor(with: message)
-                        }
-                        .clipShape(Bubble(isCurrentUsersMessage: checkIfCurrentUsersMessage(message: message)))
                         .frame(
                             maxWidth: .infinity,
-                            alignment: checkIfCurrentUsersMessage(message: message)
-                            ? .trailing
-                            : .leading
+                            alignment: messageContentsAlignment(
+                                message: message
+                            )
                         )
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
@@ -78,7 +90,7 @@ public struct MainYTChatRoomView: View {
                             anchor: .bottom
                         )
                         scrollHighlight = dateString
-                        withAnimation(Animation.easeInOut(duration: 1.0)) {
+                        withAnimation(Animation.easeInOut(duration: 1.25)) {
                             scrollHighlight = ""
                         }
                     }
@@ -139,6 +151,22 @@ public struct MainYTChatRoomView: View {
     
     private func checkIfCurrentUsersMessage(message: Message) -> Bool {
         message.messageSenderID == "Current"
+    }
+    
+    private func messageContentsAlignment(message: Message) -> Alignment {
+        if checkIfCurrentUsersMessage(message: message) {
+            return .trailing
+        } else {
+            return .leading
+        }
+    }
+    
+    private func messageContentsHorizontalAlignment(message: Message) -> HorizontalAlignment {
+        if checkIfCurrentUsersMessage(message: message) {
+            return .trailing
+        } else {
+            return .leading
+        }
     }
 }
 
