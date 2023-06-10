@@ -40,8 +40,9 @@ public struct ChatStateStore: ReducerProtocol {
         case sendMessage
         case afterSendMessage
         case changeName
-        case scrollToSpecificDate
-        case highlightMessageBubble
+        case selectDateToScroll
+        case scrollToSpecificDate(specificDate: Date)
+        case highlightMessageBubble(withID: String)
     }
     
     public init() { }
@@ -61,12 +62,16 @@ public struct ChatStateStore: ReducerProtocol {
             case .changeName:
                 state.name = state.chatStateFilter.rawValue
                 return .none
+            
+            case .selectDateToScroll:
+                return .send(.scrollToSpecificDate(specificDate: .now))
                 
-            case .scrollToSpecificDate:
+            case let .scrollToSpecificDate(specificDate):
+                state.scollDate = specificDate
+                return .send(.highlightMessageBubble(withID: ""))
                 
-                return .send(.highlightMessageBubble)
-                
-            case .highlightMessageBubble:
+            case let .highlightMessageBubble(dateID):
+                state.scrollHighlight = dateID
                 return .none
             }
         }
