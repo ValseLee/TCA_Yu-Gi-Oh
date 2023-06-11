@@ -8,6 +8,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import YugiTraderAppInternal
 
 public enum StateFilter: String {
     case all, proceeding, completed
@@ -39,10 +40,9 @@ public struct ChatStateStore: ReducerProtocol {
     public enum Action: Equatable {
         case sendMessage
         case afterSendMessage
-        case changeName
-        case selectDateToScroll
-        case scrollToSpecificDate(specificDate: Date)
-        case highlightMessageBubble(withID: String)
+        case selectDateToScroll(message: Message)
+        case scrollToSpecificDate(message: Message)
+        case highlightMessageBubble(message: Message)
     }
     
     public init() { }
@@ -57,21 +57,17 @@ public struct ChatStateStore: ReducerProtocol {
                 
             case .afterSendMessage:
                 state.chatStateFilter = .completed
-                return .send(.changeName)
-            
-            case .changeName:
-                state.name = state.chatStateFilter.rawValue
                 return .none
             
-            case .selectDateToScroll:
-                return .send(.scrollToSpecificDate(specificDate: .now))
+            case let .selectDateToScroll(message):
+                return .send(.scrollToSpecificDate(message: message))
                 
-            case let .scrollToSpecificDate(specificDate):
-                state.scollDate = specificDate
-                return .send(.highlightMessageBubble(withID: ""))
+            case let .scrollToSpecificDate(message):
+                state.scollDate = message.date
+                return .send(.highlightMessageBubble(message: message))
                 
-            case let .highlightMessageBubble(dateID):
-                state.scrollHighlight = dateID
+            case let .highlightMessageBubble(message):
+                state.scrollHighlight = message.getSpecificDateStringToScroll()
                 return .none
             }
         }
