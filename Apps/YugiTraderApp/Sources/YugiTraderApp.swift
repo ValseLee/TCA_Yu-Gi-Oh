@@ -1,17 +1,16 @@
 import SwiftUI
 import FirebaseCore
-import YugiTraderAppInternal
 import YugiTraderLoginKit
+import YugiTraderChatUI
 
 @main
 struct YugiTraderApp: App {
-    // Dependency From YugiTraderAppInternal
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    // Inject Dependency From Ohter Kits
     
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                YTLoginView()
+                MainYTChatRoomView()
             }
         }
     }
