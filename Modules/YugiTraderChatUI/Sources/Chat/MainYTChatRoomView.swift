@@ -178,27 +178,3 @@ struct MainYTChatRoomView_Previews: PreviewProvider {
     }
 }
 
-struct Message: Hashable {
-    let id: String = UUID().uuidString
-    let message: String
-    let date: Date
-    let messageSenderID: String
-    
-    static func getMockArray(
-        repeatCount: Int
-    ) -> [Self] {
-        var array = [Message]()
-        
-        for count in 0..<repeatCount {
-            array.append(
-                Message(
-                    message: "mock Message",
-                    date: .now.adding(days: -count),
-                    messageSenderID: count % 2 == 0 ? "Current" : "Others"
-                )
-            )
-        }
-        
-        return array
-    }
-}
