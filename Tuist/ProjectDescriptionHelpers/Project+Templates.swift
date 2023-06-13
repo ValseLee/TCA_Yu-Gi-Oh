@@ -14,9 +14,9 @@ public extension TargetDependency {
         path: .relativeToRoot("Modules/CommonModule")
     )
     
-    static let yugiTraderAppInternal: Self = .project(
-        target: "YugiTraderAppInternal",
-        path: .relativeToRoot("Modules/YugiTraderAppInternal")
+    static let yugiTraderAppCore: Self = .project(
+        target: "YugiTraderAppCore",
+        path: .relativeToRoot("Modules/YugiTraderAppCore")
     )
     
     static let yugiTraderChat: Self = .project(
@@ -136,7 +136,7 @@ extension Project {
                     platform: .iOS,
                     dependencies: [
                         .commonModule,
-                        .yugiTraderAppInternal,
+                        .yugiTraderAppCore,
                     ]
                 )
             ]
