@@ -1,7 +1,7 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-private let name = "CommonModule"
+private let name = "CommonUI"
 
 let project = Project(
     name: name,
@@ -15,7 +15,7 @@ let project = Project(
             deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
             infoPlist: .default,
             sources: [.glob(.relativeToManifest("Sources/**"))],
-            resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
+            resources: [],
             dependencies: [
                 .sendbirdChatSDK,
                 .composableArchitecture
