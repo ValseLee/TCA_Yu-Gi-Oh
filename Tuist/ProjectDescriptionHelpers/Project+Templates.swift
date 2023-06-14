@@ -7,46 +7,34 @@ public extension TargetDependency {
     static let composableArchitecture: Self = .external(name: "ComposableArchitecture")
 }
 
-// MARK: - TARGET DEPENDENCY > FRAMEWORKS
+// MARK: - TARGET DEPENDENCY > Internal
 public extension TargetDependency {
-    static let commonModule: Self = .project(
-        target: "CommonModule",
-        path: .relativeToRoot("Modules/CommonModule")
+    static let yugiTraderAppCore: Self = .project(
+        target: "Core",
+        path: .relativeToRoot("Domains/Core")
     )
     
-    static let yugiTraderAppCore: Self = .project(
-        target: "YugiTraderAppCore",
-        path: .relativeToRoot("Modules/YugiTraderAppCore")
+    static let commonUI: Self = .project(
+        target: "CommonUI",
+        path: .relativeToRoot("Domains/CommonUI")
+    )
+    
+    static let utilities: Self = .project(
+        target: "Utilities",
+        path: .relativeToRoot("Domains/Utilities")
+    )
+}
+
+// MARK: - TARGET DEPENDENCY > FEATURES
+public extension TargetDependency {
+    static let yugiTraderAuth: Self = .project(
+        target: "YugiTraderAuth",
+        path: .relativeToRoot("Features/Auth")
     )
     
     static let yugiTraderChat: Self = .project(
         target: "YugiTraderChat",
-        path: .relativeToRoot("Apps/YugiTraderChat")
-    )
-    
-    static let yugiTraderChatKit: Self = .project(
-        target: "YugiTraderChatKit",
-        path: .relativeToRoot("Modules/YugiTraderChatKit")
-    )
-    
-    static let yugiTraderChatUI: Self = .project(
-        target: "YugiTraderChatUI",
-        path: .relativeToRoot("Modules/YugiTraderChatUI")
-    )
-    
-    static let yugiTraderLogin: Self = .project(
-        target: "YugiTraderLogin",
-        path: .relativeToRoot("Apps/YugiTraderLogin")
-    )
-    
-    static let yugiTraderLoginKit: Self = .project(
-        target: "YugiTraderLoginKit",
-        path: .relativeToRoot("Modules/YugiTraderLoginKit")
-    )
-    
-    static let yugiTraderLoginUI: Self = .project(
-        target: "YugiTraderLoginUI",
-        path: .relativeToRoot("Modules/YugiTraderLoginUI")
+        path: .relativeToRoot("Features/Chat")
     )
 }
 
@@ -100,32 +88,10 @@ extension Project {
     }
     
     /**
-     subApp의 하위 모듈을 framework로 repackaging 하는 메소드.
-     mainApp은 subApp을 참조한다.
-     */
-    public static func subApp(
-        name: String,
-        targetDependencies: [TargetDependency]
-    ) -> Project {
-        Project(
-            name: name,
-            organizationName: "Celan",
-            targets: [
-                makeFrameworkTarget(
-                    name: name,
-                    platform: .iOS,
-                    dependencies: targetDependencies
-                ),
-            ]
-        )
-    }
-    
-    /**
      해당하는 모든 프레임워크 타겟에 공통으로 CommonModule, Internal 설정 의존성 주입
      */
-    public static func framework(
+    public static func featureProject(
         name: String
-//        additionalTargets: [String]
     ) -> Project {
         Project(
             name: name,
@@ -135,14 +101,18 @@ extension Project {
                     name: name,
                     platform: .iOS,
                     dependencies: [
-                        .commonModule,
+                        .commonUI,
                         .yugiTraderAppCore,
+                        .utilities
                     ]
                 )
             ]
         )
     }
     
+    /**
+     App의 Target을 설정합니다.
+     */
     private static func makeAppTarget(
         name: String,
         platform: Platform,
@@ -167,7 +137,8 @@ extension Project {
             resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
             dependencies: dependencies,
             settings: .settings(
-                base: SettingsDictionary().automaticCodeSigning(devTeam: "67M6ZS7KS6"),
+                base: SettingsDictionary()
+                    .automaticCodeSigning(devTeam: "67M6ZS7KS6"),
                 configurations: [
                     .debug(name: .debug, settings: .firebase),
                     .release(name: .release, settings: .firebase),
@@ -179,6 +150,9 @@ extension Project {
         return mainTarget
     }
     
+    /**
+     Feature Framework의 Target을 설정합니다.
+     */
     private static func makeFrameworkTarget(
         name: String,
         platform: Platform,
@@ -192,7 +166,7 @@ extension Project {
             "FirebaseAppDelegateProxyEnabled": "NO"
         ]
 
-        let mainTarget = Target(
+        let frameworkTarget = Target(
             name: name,
             platform: platform,
             product: .framework,
@@ -200,7 +174,9 @@ extension Project {
             deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
             infoPlist: .extendingDefault(with: infoPlist),
             sources: [.glob(.relativeToManifest("Sources/**"))],
-            resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
+//            resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
+//            기능을 구현하는 모듈에 리소스가 필요한가?
+            resources: [],
             dependencies: dependencies,
             settings: .settings(
                 base: SettingsDictionary().automaticCodeSigning(devTeam: "67M6ZS7KS6"),
@@ -211,6 +187,7 @@ extension Project {
                 defaultSettings: .recommended
             )
         )
-        return mainTarget
+        
+        return frameworkTarget
     }
 }
