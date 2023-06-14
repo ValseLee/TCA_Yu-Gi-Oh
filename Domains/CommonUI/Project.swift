@@ -10,16 +10,14 @@ let project = Project(
         Target(
             name: name,
             platform: .iOS,
-            product: .framework,
+            // SDK Type, No Resources -> Static Framework
+            product: .staticFramework,
             bundleId: "com.Celan.\(name)",
             deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
             infoPlist: .default,
             sources: [.glob(.relativeToManifest("Sources/**"))],
             resources: [],
-            dependencies: [
-                .sendbirdChatSDK,
-                .composableArchitecture
-            ]
+            dependencies: []
         )
     ]
 )
