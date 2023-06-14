@@ -8,8 +8,9 @@ extension Workspace {
         Workspace(
             name: "TCA_YugiTrader",
             projects: [
-                "Apps/**",
-                "Modules/**+"
+                "App/**",
+                "Domains/**+",
+                "Features/**+"
             ],
             schemes: []
         )
