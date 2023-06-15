@@ -10,8 +10,8 @@ public extension TargetDependency {
 // MARK: - TARGET DEPENDENCY > Internal
 public extension TargetDependency {
     static let yugiTraderAppCore: Self = .project(
-        target: "Core",
-        path: .relativeToRoot("Domains/Core")
+        target: "AppCore",
+        path: .relativeToRoot("Domains/AppCore")
     )
     
     static let commonUI: Self = .project(

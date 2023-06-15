@@ -30,11 +30,11 @@ extension Workspace {
             name: name,
             shared: true,
             buildAction: .buildAction(
-                targets: [.project(path: "Apps/\(name)", target: name)],
+                targets: [.project(path: "App/\(name)", target: name)],
                 preActions: []
             ),
             runAction: .runAction(
-                executable: .project(path: "Apps/\(name)", target: name)
+                executable: .project(path: "App/\(name)", target: name)
             )
         )
     }
