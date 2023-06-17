@@ -1,7 +1,7 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-private let name = "Core"
+private let name = "AppCore"
 
 private let infoPlist: [String: InfoPlist.Value] = [
     "CFBundleShortVersionString": "1.0",
