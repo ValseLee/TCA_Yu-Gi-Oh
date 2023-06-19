@@ -23,6 +23,7 @@ let project = Project(
             resources: [],
             dependencies: [
                 .firebaseMessaging,
+                .composableArchitecture
             ],
             settings: .settings(
                 configurations: [
