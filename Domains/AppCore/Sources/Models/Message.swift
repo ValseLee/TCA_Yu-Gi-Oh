@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Utilities
 
 public struct Message: Hashable {
     public let id: String = UUID().uuidString
