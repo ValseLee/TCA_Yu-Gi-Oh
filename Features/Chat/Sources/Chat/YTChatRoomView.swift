@@ -7,10 +7,13 @@
 //
 
 import SwiftUI
-import CommonModule
-import YugiTraderAppInternal
+import AppCore
+import Utilities
+import ComposableArchitecture
 
 public struct MainYTChatRoomView: View {
+    let store: StoreOf<ChatStateStore>
+    
     @State private var scollDate: Date = .now
     @State private var scrollHighlight: String = ""
     @State private var isCalendarShown: Bool = false
@@ -26,88 +29,102 @@ public struct MainYTChatRoomView: View {
         }
     }
 
-    // MARK: - LIFECYCLE
-    public init() { }
+//    // MARK: - LIFECYCLE
+//    public init() { }
+//
+//    public init(date: Date) {
+//        self.scollDate = date
+//    }
     
-    public init(date: Date) {
-        self.scollDate = date
+    public init(
+        store: StoreOf<ChatStateStore>,
+        scollDate: Date,
+        scrollHighlight: String,
+        isCalendarShown: Bool) {
+        self.store = store
+        self.scollDate = scollDate
+        self.scrollHighlight = scrollHighlight
+        self.isCalendarShown = isCalendarShown
     }
     
     // MARK: - BODY
     public var body: some View {
         ScrollView {
-            ScrollViewReader { reader in
-                VStack {
-                    ForEach(
-                        Array(mockArr.enumerated()),
-                        id: \.offset
-                    ) { index, message in
-                        VStack(
-                            alignment: messageContentsHorizontalAlignment(
-                                message: message
-                            ),
-                            spacing: 5
-                        ) {
-                            Text(message.messageSenderID)
-                                .bold()
-                            
-                            VStack {
-                                Text("\(index), \(message.message)")
-                                    .padding(.horizontal, 8)
-                                    .padding()
+            WithViewStore(self.store, observe: { $0 }) { viewStore in
+                ScrollViewReader { reader in
+                    VStack {
+                        ForEach(
+                            Array(mockArr.enumerated()),
+                            id: \.offset
+                        ) { index, message in
+                            VStack(
+                                alignment: messageContentsHorizontalAlignment(
+                                    message: message
+                                ),
+                                spacing: 5
+                            ) {
+                                Text(message.messageSenderID)
+                                    .bold()
+                                
+                                VStack {
+                                    Text("\(index), \(message.message)")
+                                        .padding(.horizontal, 8)
+                                        .padding()
+                                }
+                                .background {
+                                    getMessageCellBackgroundColor(with: message)
+                                }
+                                .clipShape(Bubble(isCurrentUsersMessage: checkIfCurrentUsersMessage(message: message)))
+                                
+                                Text(
+                                    Date.getMessageDateString(
+                                        with: message.date
+                                    )
+                                )
+                                .font(.footnote)
                             }
-                            .background {
-                                getMessageCellBackgroundColor(with: message)
-                            }
-                            .clipShape(Bubble(isCurrentUsersMessage: checkIfCurrentUsersMessage(message: message)))
-                            
-                            Text(
-                                Date.getMessageDateString(
-                                    with: message.date
+                            .frame(
+                                maxWidth: .infinity,
+                                alignment: messageContentsAlignment(
+                                    message: message
                                 )
                             )
-                            .font(.footnote)
-                        }
-                        .frame(
-                            maxWidth: .infinity,
-                            alignment: messageContentsAlignment(
-                                message: message
-                            )
-                        )
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
-                        .id(Date.getMessageDateString(with: message.date))
-                    }
-                }
-                .id("TOP")
-                .onChange(of: scollDate) { newValue in
-                    let dateString = Date.getMessageDateString(with: newValue)
-                    isCalendarShown = false
-                    
-                    withAnimation {
-                        reader.scrollTo(
-                            dateString,
-                            anchor: .bottom
-                        )
-                        scrollHighlight = dateString
-                        withAnimation(Animation.easeInOut(duration: 1.25)) {
-                            scrollHighlight = ""
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .id(Date.getMessageDateString(with: message.date))
                         }
                     }
-                }
-                .overlay(alignment: .bottomTrailing) {
-                    Button {
+                    .id("TOP")
+                    .onChange(of: scollDate) { newValue in
+                        let dateString = Date.getMessageDateString(with: newValue)
+                        isCalendarShown = false
+                        
                         withAnimation {
                             reader.scrollTo(
-                                "TOP",
-                                anchor: .top
+                                dateString,
+                                anchor: .bottom
                             )
+                            scrollHighlight = dateString
+                            withAnimation(Animation.easeInOut(duration: 1.25)) {
+                                scrollHighlight = ""
+                            }
                         }
-                    } label: {
-                        Text("TO TOP")
+                    }
+                    .overlay(alignment: .bottomTrailing) {
+                        Button {
+                            withAnimation {
+                                reader.scrollTo(
+                                    "TOP",
+                                    anchor: .top
+                                )
+                            }
+                        } label: {
+                            Text("TO TOP")
+                        }
                     }
                 }
             }
+            
         }
         .sheet(isPresented: $isCalendarShown) {
             ScrollView {
@@ -173,7 +190,7 @@ public struct MainYTChatRoomView: View {
 struct MainYTChatRoomView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            MainYTChatRoomView()
+//            MainYTChatRoomView()
         }
     }
 }
