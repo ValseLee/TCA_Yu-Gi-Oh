@@ -14,8 +14,6 @@ import ComposableArchitecture
 public struct MainYTChatRoomView: View {
     let store: StoreOf<ChatStateStore>
     
-    @State private var scollDate: Date = .now
-    @State private var scrollHighlight: String = ""
     @State private var isCalendarShown: Bool = false
     
     let mockArr: [Message] = Message.getMockArray(repeatCount: 30)
@@ -28,29 +26,20 @@ public struct MainYTChatRoomView: View {
             return Date.now ... Date.now
         }
     }
-
-//    // MARK: - LIFECYCLE
-//    public init() { }
-//
-//    public init(date: Date) {
-//        self.scollDate = date
-//    }
     
+    // MARK: LIFECYCLE
     public init(
         store: StoreOf<ChatStateStore>,
-        scollDate: Date,
-        scrollHighlight: String,
-        isCalendarShown: Bool) {
+        isCalendarShown: Bool
+    ) {
         self.store = store
-        self.scollDate = scollDate
-        self.scrollHighlight = scrollHighlight
         self.isCalendarShown = isCalendarShown
     }
     
     // MARK: - BODY
     public var body: some View {
-        ScrollView {
-            WithViewStore(self.store, observe: { $0 }) { viewStore in
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
+            ScrollView {
                 ScrollViewReader { reader in
                     VStack {
                         ForEach(
@@ -58,9 +47,7 @@ public struct MainYTChatRoomView: View {
                             id: \.offset
                         ) { index, message in
                             VStack(
-                                alignment: messageContentsHorizontalAlignment(
-                                    message: message
-                                ),
+                                alignment: viewStore.state.messageBubbleHorizontalAlignment,
                                 spacing: 5
                             ) {
                                 Text(message.messageSenderID)
@@ -71,10 +58,8 @@ public struct MainYTChatRoomView: View {
                                         .padding(.horizontal, 8)
                                         .padding()
                                 }
-                                .background {
-                                    getMessageCellBackgroundColor(with: message)
-                                }
-                                .clipShape(Bubble(isCurrentUsersMessage: checkIfCurrentUsersMessage(message: message)))
+                                .background { viewStore.state.messageBubbleBackgroundColor }
+//                                .clipShape(Bubble(isCurrentUsersMessage: checkIfCurrentUsersMessage(message: message)))
                                 
                                 Text(
                                     Date.getMessageDateString(
@@ -85,9 +70,7 @@ public struct MainYTChatRoomView: View {
                             }
                             .frame(
                                 maxWidth: .infinity,
-                                alignment: messageContentsAlignment(
-                                    message: message
-                                )
+                                alignment: viewStore.state.messageBubbleAlignment
                             )
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
@@ -95,94 +78,46 @@ public struct MainYTChatRoomView: View {
                         }
                     }
                     .id("TOP")
-                    .onChange(of: scollDate) { newValue in
+                    .onChange(of: viewStore.state.scrollDate) { newValue in
                         let dateString = Date.getMessageDateString(with: newValue)
-                        isCalendarShown = false
-                        
-                        withAnimation {
-                            reader.scrollTo(
-                                dateString,
-                                anchor: .bottom
-                            )
-                            scrollHighlight = dateString
-                            withAnimation(Animation.easeInOut(duration: 1.25)) {
-                                scrollHighlight = ""
-                            }
-                        }
+                        viewStore.send(.renderAction(.scrollTo(proxy: reader, position: dateString)))
                     }
                     .overlay(alignment: .bottomTrailing) {
                         Button {
-                            withAnimation {
-                                reader.scrollTo(
-                                    "TOP",
-                                    anchor: .top
-                                )
-                            }
+                            viewStore.send(.renderAction(.scrollTo(proxy: reader, position: "TOP")))
                         } label: {
                             Text("TO TOP")
                         }
                     }
                 }
             }
-            
-        }
-        .sheet(isPresented: $isCalendarShown) {
-            ScrollView {
-                DatePicker(
-                    selection: $scollDate,
-                    in: arrDateRange,
-                    displayedComponents: .date) {
-                        Image(systemName: "calendar")
-                    }
-                    .datePickerStyle(.graphical)
-                    .frame(width: 340)
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    withAnimation {
-                        if !isCalendarShown {
-                            isCalendarShown = true
-                        } else {
-                            isCalendarShown = false
-                        }
-                    }
-                } label: {
-                    Image(systemName: "calendar")
+            .sheet(isPresented: $isCalendarShown) {
+                ScrollView {
+                    //                DatePicker(
+                    //                    selection: $scollDate,
+                    //                    in: arrDateRange,
+                    //                    displayedComponents: .date) {
+                    //                        Image(systemName: "calendar")
+                    //                    }
+                    //                    .datePickerStyle(.graphical)
+                    //                    .frame(width: 340)
                 }
             }
-        }
-    }
-    
-    private func getMessageCellBackgroundColor(with message: Message) -> Color {
-        let dateString = Date.getMessageDateString(with: message.date)
-        if scrollHighlight == dateString {
-            return Color.yellow
-        } else {
-            return message.messageSenderID == "Current"
-            ? Color.blue
-            : Color.orange
-        }
-    }
-    
-    private func checkIfCurrentUsersMessage(message: Message) -> Bool {
-        message.messageSenderID == "Current"
-    }
-    
-    private func messageContentsAlignment(message: Message) -> Alignment {
-        if checkIfCurrentUsersMessage(message: message) {
-            return .trailing
-        } else {
-            return .leading
-        }
-    }
-    
-    private func messageContentsHorizontalAlignment(message: Message) -> HorizontalAlignment {
-        if checkIfCurrentUsersMessage(message: message) {
-            return .trailing
-        } else {
-            return .leading
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        withAnimation {
+                            if !isCalendarShown {
+                                isCalendarShown = true
+                            } else {
+                                isCalendarShown = false
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "calendar")
+                    }
+                }
+            }
         }
     }
 }
