@@ -13,6 +13,7 @@ extension Workspace {
                 "Features/**+"
             ],
             schemes: []
+//            schemes: [appScheme(name: "YugiTraderChat")]
         )
     }
 }
@@ -31,10 +32,12 @@ extension Workspace {
             shared: true,
             buildAction: .buildAction(
                 targets: [.project(path: "App/\(name)", target: name)],
+//                targets: [.project(path: "Features/\(name)", target: name)],
                 preActions: []
             ),
             runAction: .runAction(
                 executable: .project(path: "App/\(name)", target: name)
+//                executable: .project(path: "Features/\(name)", target: name)
             )
         )
     }
