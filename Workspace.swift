@@ -9,8 +9,9 @@ extension Workspace {
             name: "TCA_YugiTrader",
             projects: [
                 "App/**",
-                "Domains/**+",
-                "Features/**+"
+                "Demos/**",
+                "Domains/**",
+                "Features/**",
             ],
             schemes: []
 //            schemes: [appScheme(name: "YugiTraderChat")]
