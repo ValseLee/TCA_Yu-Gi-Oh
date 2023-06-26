@@ -110,6 +110,25 @@ extension Project {
         )
     }
     
+    public static func demoProject(
+        name: String,
+        dependency: TargetDependency
+    ) -> Project {
+        Project(
+            name: name,
+            organizationName: "Celan",
+            targets: [
+                makeDemoTarget(
+                    name: name,
+                    platform: .iOS,
+                    dependencies: [
+                        dependency
+                    ]
+                )
+            ]
+        )
+    }
+    
     /**
      App의 Target을 설정합니다.
      */
@@ -158,13 +177,13 @@ extension Project {
         platform: Platform,
         dependencies: [TargetDependency]
     ) -> Target {
-        let infoPlist: [String: InfoPlist.Value] = [
-            "CFBundleShortVersionString": "1.0",
-            "CFBundleVersion": "1",
-            "UIMainStoryboardFile": "",
-            "UILaunchStoryboardName": "LaunchScreen",
-            "FirebaseAppDelegateProxyEnabled": "NO"
-        ]
+//        let infoPlist: [String: InfoPlist.Value] = [
+//            "CFBundleShortVersionString": "1.0",
+//            "CFBundleVersion": "1",
+//            "UIMainStoryboardFile": "",
+//            "UILaunchStoryboardName": "LaunchScreen",
+//            "FirebaseAppDelegateProxyEnabled": "NO"
+//        ]
 
         let frameworkTarget = Target(
             name: name,
@@ -172,7 +191,7 @@ extension Project {
             product: .framework,
             bundleId: "com.Celan.\(name)",
             deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
-            infoPlist: .extendingDefault(with: infoPlist),
+            infoPlist: .default,
             sources: [.glob(.relativeToManifest("Sources/**"))],
 //            resources: [.glob(pattern: .relativeToManifest("Resources/**"))],
 //            기능을 구현하는 모듈에 리소스가 필요한가?
@@ -189,5 +208,41 @@ extension Project {
         )
         
         return frameworkTarget
+    }
+    
+    private static func makeDemoTarget(
+        name: String,
+        platform: Platform,
+        dependencies: [TargetDependency]
+    ) -> Target{
+        let infoPlist: [String: InfoPlist.Value] = [
+            "CFBundleShortVersionString": "1.0",
+            "CFBundleVersion": "1",
+            "UIMainStoryboardFile": "",
+            "UILaunchStoryboardName": "LaunchScreen",
+            "FirebaseAppDelegateProxyEnabled": "NO"
+        ]
+
+        let demoTarget = Target(
+            name: name,
+            platform: platform,
+            product: .app,
+            bundleId: "com.Celan.\(name)",
+            deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
+            infoPlist: .extendingDefault(with: infoPlist),
+            sources: [.glob(.relativeToManifest("Sources/**"))],
+            resources: [],
+            dependencies: dependencies,
+            settings: .settings(
+                base: SettingsDictionary().automaticCodeSigning(devTeam: "67M6ZS7KS6"),
+                configurations: [
+                    .debug(name: .debug, settings: .firebase),
+                    .release(name: .release, settings: .firebase),
+                ],
+                defaultSettings: .recommended
+            )
+        )
+        
+        return demoTarget
     }
 }
