@@ -7,15 +7,31 @@
 //
 
 import SwiftUI
+import YugiTraderChat
+import ComposableArchitecture
 
-struct ChatDemoApp: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-struct ChatDemoApp_Previews: PreviewProvider {
-    static var previews: some View {
-        ChatDemoApp()
+@main
+struct ChatDemoApp: App {
+    var body: some Scene {
+        WindowGroup {
+            NavigationStack {
+                MainYTChatRoomView(
+                    store: Store(
+                        initialState: ChatStateStore.State(
+                            chatStateFilter: .all,
+                            currentUserName: "Current",
+                            scrollDate: .now,
+                            scrollHighlight: "",
+                            isCalendarShown: false,
+                            messageBubbleAlignment: .leading,
+                            messageBubbleHorizontalAlignment: .leading,
+                            messageBubbleBackgroundColor: .primary
+                        ),
+                        reducer: ChatStateStore()
+                    ),
+                    isCalendarShown: false
+                )
+            }
+        }
     }
 }
