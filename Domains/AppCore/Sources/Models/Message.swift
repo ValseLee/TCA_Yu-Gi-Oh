@@ -9,7 +9,7 @@
 import Foundation
 import Utilities
 
-public struct Message: Hashable {
+public struct Message: Hashable, Identifiable {
     public let id: String = UUID().uuidString
     public let message: String
     public let date: Date
