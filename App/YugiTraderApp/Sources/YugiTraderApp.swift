@@ -1,7 +1,6 @@
 import SwiftUI
 import FirebaseCore
-import YugiTraderLoginKit
-import YugiTraderChatUI
+import YugiTraderAuth
 
 @main
 struct YugiTraderApp: App {
@@ -10,7 +9,7 @@ struct YugiTraderApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                MainYTChatRoomView()
+                
             }
         }
     }

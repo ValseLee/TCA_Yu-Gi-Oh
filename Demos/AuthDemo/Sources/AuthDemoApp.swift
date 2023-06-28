@@ -7,15 +7,13 @@
 //
 
 import SwiftUI
+import YugiTraderAuth
 
-struct AuthDemoApp: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-struct AuthDemoApp_Previews: PreviewProvider {
-    static var previews: some View {
-        AuthDemoApp()
+@main
+struct AuthDemoApp: App {
+    var body: some Scene {
+        WindowGroup {
+            Text("MOCK")
+        }
     }
 }

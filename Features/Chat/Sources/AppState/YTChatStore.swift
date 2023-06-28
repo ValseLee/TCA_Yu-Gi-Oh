@@ -57,6 +57,7 @@ public struct ChatStateStore: ReducerProtocol {
         case backgroundLogics(BackgroundAction)
     }
     
+    // MARK: Render Action
     public enum ViewRenderAction: Equatable {
         case renderUserMessageBubbleWithAlignment(message: Message)
         case renderUserMessageBubbleWithBackgroundColor(message: Message)
@@ -72,6 +73,7 @@ public struct ChatStateStore: ReducerProtocol {
         }
     }
     
+    // MARK: Backround Logic
     public enum BackgroundAction: Equatable {
         case sendMessage(Message)
     }
@@ -90,6 +92,7 @@ public struct ChatStateStore: ReducerProtocol {
                     if state.currentUserName == message.messageSenderID {
                         state.messageBubbleAlignment = .trailing
                         state.messageBubbleHorizontalAlignment = .trailing
+                        
                     } else {
                         state.messageBubbleAlignment = .leading
                         state.messageBubbleHorizontalAlignment = .leading
