@@ -210,6 +210,7 @@ extension Project {
         return frameworkTarget
     }
     
+    // MARK: Demo Target
     private static func makeDemoTarget(
         name: String,
         platform: Platform,
