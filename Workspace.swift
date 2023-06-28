@@ -8,10 +8,13 @@ extension Workspace {
         Workspace(
             name: "TCA_YugiTrader",
             projects: [
-                "Apps/**",
-                "Modules/**+"
+                "App/**",
+                "Demos/**",
+                "Domains/**",
+                "Features/**",
             ],
             schemes: []
+//            schemes: [appScheme(name: "YugiTraderChat")]
         )
     }
 }
@@ -29,11 +32,13 @@ extension Workspace {
             name: name,
             shared: true,
             buildAction: .buildAction(
-                targets: [.project(path: "Apps/\(name)", target: name)],
+                targets: [.project(path: "App/\(name)", target: name)],
+//                targets: [.project(path: "Features/\(name)", target: name)],
                 preActions: []
             ),
             runAction: .runAction(
-                executable: .project(path: "Apps/\(name)", target: name)
+                executable: .project(path: "App/\(name)", target: name)
+//                executable: .project(path: "Features/\(name)", target: name)
             )
         )
     }
